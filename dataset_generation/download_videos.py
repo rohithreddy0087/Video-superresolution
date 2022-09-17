@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Dec  4 20:47:06 2020
+Created on Mon Aug 10 17:09:45 2020
 
-@author: Student
+@author: Dell
 """
 
+import pandas as pd
 import youtube_dl
 import os,subprocess
 import random
+pd.options.mode.chained_assignment = None  # default='warn'
+ifile = open('youtube_video_links_deniz.csv')
+df = pd.read_csv(ifile,delimiter = ';')
 
-video_link = 'https://www.youtube.com/watch?v=XFH6IQk4YZQ'
-video_height = 240
-video_width = 426
-video_res = '240p'
+video_links = df['Video_link']
+
+video_height = 144
+video_width = 256
+video_res = '144p'
 video_format = 'mp4'
 video_fps = 30
 
@@ -53,31 +58,31 @@ def get_url_to_download(video_link):
     return url,video['duration']
 
 def download_video(url,start_time,video_name):
-    #os.close()
-    #os.remove("D:/python/New/Results/testing/"+video_name+".mp4")
-    cmd = "ffmpeg -ss "+str(start_time)+" -i \""+url+"\" -ss 10 -t 5 C:/Users/Dell/Desktop/Presentation/Results/testing/"+video_name+".mp4"
+    cmd = "ffmpeg -ss "+str(start_time)+" -i \""+url+"\" -ss 10 -t 5 C:/Users/Dell/Desktop/BTP/RBPN/rbpn/dataset/deniz_dataset/"+video_name+".mp4"
     os.system(cmd)
     #DETACHED_PROCESS = 0x00000008
     #subprocess.call('taskkill /F /IM exename.exe', creationflags=DETACHED_PROCESS)    
     #subprocess.run(cmd)
 
 
-def test_on_youtube_video(video_link):
-    url,duration = get_url_to_download(video_link)
+k = 1
+for i in range(len(video_links)):
+    url,duration = get_url_to_download(video_links[i])
     if url == -1:
-        print(" Not succesful")
+        print(str(i)+" Not succesful")
     else:
         if duration > min_video_duration+10 and duration < 2400  :
             print(duration)
             
-            start_times = sorted(random.sample(range(min_video_duration, duration-10), 1))
-            for j in range(1):
-                name =  'input'
-                download_video(url,start_times[j],name)
+            start_times = sorted(random.sample(range(min_video_duration, duration-10), 3))
             
-    # =============================================================================
-    #         name =  '{0:03d}'.format(k)
-    #         start_times = random.sample(range(min_video_duration, duration-10), 1)
-    #         download_video(url,start_times[0],name)
-    #         k = k+1
-    # =============================================================================
+            for j in range(3):
+                name =  '{0:03d}'.format(k)
+                download_video(url,start_times[j],name)
+                k = k+1
+            """
+            name =  '{0:03d}'.format(k)
+            start_times = random.sample(range(3, 15), 1)
+            download_video(url,start_times[0],name)
+            k = k+1
+            """
