@@ -1,2 +1,3 @@
-#SRGAN
+# SRGAN
+
 Implemented SRGAN on videos
